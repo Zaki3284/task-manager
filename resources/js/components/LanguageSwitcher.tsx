@@ -1,4 +1,4 @@
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { useState, useEffect, useRef } from 'react';
 
 const languages = [
@@ -8,27 +8,29 @@ const languages = [
 ];
 
 interface LanguageSwitcherProps {
-  currentLang?: string;
   onChange?: (lang: string) => void;
-  variant?: 'dropdown' | 'flags' | 'minimal';
+  variant?: 'dropdown' | 'flags' | 'minimal' | 'select';
   className?: string;
 }
 
 export default function LanguageSwitcher({ 
-  currentLang = 'en', 
   onChange,
   variant = 'dropdown',
   className = ''
 }: LanguageSwitcherProps) {
+  const { props } = usePage();
+  const serverLocale = (props as any).locale || 'en';
+  
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(currentLang);
+  const [selectedLang, setSelectedLang] = useState(serverLocale);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentLanguage = languages.find(lang => lang.code === selectedLang) || languages[0];
 
+  // Sync with server locale
   useEffect(() => {
-    setSelectedLang(currentLang);
-  }, [currentLang]);
+    setSelectedLang(serverLocale);
+  }, [serverLocale]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -45,24 +47,41 @@ export default function LanguageSwitcher({
     setSelectedLang(langCode);
     setIsOpen(false);
     
-    // ✅ REMOVED localStorage - Only use server-side storage via cookie
-    
     const lang = languages.find(l => l.code === langCode);
     if (lang) {
       document.documentElement.dir = lang.dir;
       document.documentElement.lang = langCode;
     }
     
-    // Server handles persistence via cookie
+    // Global language change - affects ALL pages
     router.post('/change-language', { language: langCode }, {
       preserveScroll: true,
-      preserveState: true
+      preserveState: false,
+      onSuccess: () => {
+        router.reload({ only: ['locale', 'translations', 'dir'] });
+      }
     });
     
     if (onChange) {
       onChange(langCode);
     }
   };
+
+  // Select variant (Bootstrap style)
+  if (variant === 'select') {
+    return (
+      <select
+        className={`form-select form-select-sm ${className}`}
+        style={{ width: '120px' }}
+        value={selectedLang}
+        onChange={(e) => handleLanguageChange(e.target.value)}
+      >
+        <option value="en">🇬🇧 English</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="ar">🇸🇦 العربية</option>
+      </select>
+    );
+  }
 
   // Dropdown variant
   if (variant === 'dropdown') {

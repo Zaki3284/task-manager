@@ -34,28 +34,27 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
-    public function share(Request $request): array
-    {
-        $locale = app()->getLocale();
-        
-        // Load translations
-        $translationFile = lang_path("{$locale}.json");
-        $translations = File::exists($translationFile) 
-            ? json_decode(File::get($translationFile), true) 
-            : [];
+public function share(Request $request): array
+{
+    $locale = session('locale', config('app.locale', 'en'));
+    
+    // Load translations
+    $translationFile = lang_path("{$locale}.json");
+    $translations = File::exists($translationFile) 
+        ? json_decode(File::get($translationFile), true) 
+        : [];
 
-        return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'locale' => session('locale', config('app.locale', 'en')),
-            // 'locale' => $locale,
-            'translations' => $translations,
-            'dir' => $locale === 'ar' ? 'rtl' : 'ltr',
-            'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
-            ],
-        ]);
-    }
+    return array_merge(parent::share($request), [
+        'auth' => [
+            'user' => $request->user(),
+        ],
+        'locale' => $locale, // ✅ Always pass current locale
+        'translations' => $translations,
+        'dir' => $locale === 'ar' ? 'rtl' : 'ltr',
+        'flash' => [
+            'success' => fn () => $request->session()->get('success'),
+            'error' => fn () => $request->session()->get('error'),
+        ],
+    ]);
+}
 }

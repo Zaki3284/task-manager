@@ -1,10 +1,11 @@
-import { Head, Link, useForm, router } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import { FaTasks } from 'react-icons/fa'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useTranslation } from '@/hooks/useTranslation'
 
 export default function Register() {
-    const { t, locale, dir } = useTranslation()
-    
+    const { t, dir } = useTranslation()
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -16,13 +17,6 @@ export default function Register() {
         e.preventDefault()
         post('register', {
             onFinish: () => reset('password', 'password_confirmation'),
-        })
-    }
-
-    const changeLanguage = (lang: string) => {
-        router.post('/change-language', { language: lang }, {
-            preserveScroll: true,
-            preserveState: true
         })
     }
 
@@ -52,11 +46,9 @@ export default function Register() {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-md-7 col-lg-5">
-
                             {/* Card */}
                             <div className="card border-0 shadow-lg rounded-4">
                                 <div className="card-body p-4 p-md-5">
-
                                     {/* Logo */}
                                     <div className="text-center mb-4">
                                         <div
@@ -68,28 +60,26 @@ export default function Register() {
                                                     'linear-gradient(135deg, #667eea, #764ba2)',
                                             }}
                                         >
-                                            <FaTasks size={28} className="text-white" />
+                                            <FaTasks
+                                                size={28}
+                                                className="text-white"
+                                            />
                                         </div>
 
                                         <h4 className="fw-bold mb-1">
-                                            TaskFlow<span className="text-primary">Pro</span>
+                                            TaskFlow
+                                            <span className="text-primary">
+                                                Pro
+                                            </span>
                                         </h4>
                                         <p className="text-muted small mb-0">
                                             {t('create_your_account')}
                                         </p>
                                     </div>
 
-                                    {/* Language Selector */}
-                                    <div className="mb-3">
-                                        <select
-                                            className="form-select form-select-sm"
-                                            value={locale}
-                                            onChange={(e) => changeLanguage(e.target.value)}
-                                        >
-                                            <option value="en">🇬🇧 English</option>
-                                            <option value="fr">🇫🇷 Français</option>
-                                            <option value="ar">🇸🇦 العربية</option>
-                                        </select>
+                                    {/* Language Switcher */}
+                                    <div className="mb-3 d-flex justify-content-center">
+                                        <LanguageSwitcher variant="select" />
                                     </div>
 
                                     {/* Form */}
@@ -105,12 +95,21 @@ export default function Register() {
                                                 </span>
                                                 <input
                                                     type="text"
-                                                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                                                    className={`form-control ${
+                                                        errors.name
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                    }`}
                                                     value={data.name}
                                                     onChange={(e) =>
-                                                        setData('name', e.target.value)
+                                                        setData(
+                                                            'name',
+                                                            e.target.value
+                                                        )
                                                     }
-                                                    placeholder={t('full_name')}
+                                                    placeholder={t(
+                                                        'full_name'
+                                                    )}
                                                     required
                                                 />
                                             </div>
@@ -132,12 +131,21 @@ export default function Register() {
                                                 </span>
                                                 <input
                                                     type="email"
-                                                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                    className={`form-control ${
+                                                        errors.email
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                    }`}
                                                     value={data.email}
                                                     onChange={(e) =>
-                                                        setData('email', e.target.value)
+                                                        setData(
+                                                            'email',
+                                                            e.target.value
+                                                        )
                                                     }
-                                                    placeholder={t('email_placeholder')}
+                                                    placeholder={t(
+                                                        'email_placeholder'
+                                                    )}
                                                     required
                                                 />
                                             </div>
@@ -159,10 +167,17 @@ export default function Register() {
                                                 </span>
                                                 <input
                                                     type="password"
-                                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                                    className={`form-control ${
+                                                        errors.password
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                    }`}
                                                     value={data.password}
                                                     onChange={(e) =>
-                                                        setData('password', e.target.value)
+                                                        setData(
+                                                            'password',
+                                                            e.target.value
+                                                        )
                                                     }
                                                     placeholder="••••••••"
                                                     required
@@ -186,8 +201,14 @@ export default function Register() {
                                                 </span>
                                                 <input
                                                     type="password"
-                                                    className={`form-control ${errors.password_confirmation ? 'is-invalid' : ''}`}
-                                                    value={data.password_confirmation}
+                                                    className={`form-control ${
+                                                        errors.password_confirmation
+                                                            ? 'is-invalid'
+                                                            : ''
+                                                    }`}
+                                                    value={
+                                                        data.password_confirmation
+                                                    }
                                                     onChange={(e) =>
                                                         setData(
                                                             'password_confirmation',
@@ -200,7 +221,9 @@ export default function Register() {
                                             </div>
                                             {errors.password_confirmation && (
                                                 <div className="invalid-feedback d-block">
-                                                    {errors.password_confirmation}
+                                                    {
+                                                        errors.password_confirmation
+                                                    }
                                                 </div>
                                             )}
                                         </div>
@@ -241,7 +264,6 @@ export default function Register() {
                                 </div>
                             </div>
                             {/* /Card */}
-
                         </div>
                     </div>
                 </div>

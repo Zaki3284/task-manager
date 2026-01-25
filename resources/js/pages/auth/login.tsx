@@ -1,5 +1,6 @@
-import { Head, Link, useForm, router } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import { FaTasks } from 'react-icons/fa'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useTranslation } from '@/hooks/useTranslation'
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 }
 
 export default function Login({ status, canResetPassword, canRegister }: Props) {
-    const { t, locale, dir } = useTranslation()
+    const { t, dir } = useTranslation()
     
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -21,13 +22,6 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
         e.preventDefault()
         post('login', {
             onFinish: () => reset('password'),
-        })
-    }
-
-    const changeLanguage = (lang: string) => {
-        router.post('/change-language', { language: lang }, {
-            preserveScroll: true,
-            preserveState: true
         })
     }
 
@@ -83,17 +77,9 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                         </p>
                                     </div>
 
-                                    {/* Language Selector */}
-                                    <div className="mb-3">
-                                        <select
-                                            className="form-select form-select-sm"
-                                            value={locale}
-                                            onChange={(e) => changeLanguage(e.target.value)}
-                                        >
-                                            <option value="en">🇬🇧 English</option>
-                                            <option value="fr">🇫🇷 Français</option>
-                                            <option value="ar">🇸🇦 العربية</option>
-                                        </select>
+                                    {/* Language Switcher - Global */}
+                                    <div className="mb-3 d-flex justify-content-center">
+                                        <LanguageSwitcher variant="select" />
                                     </div>
 
                                     {/* Status */}

@@ -46,8 +46,6 @@ Route::resource('projects', ProjectController::class)->only([
 });
 
 
-
-// ✅ ADD THIS ROUTE
 Route::post('/change-language', function (Illuminate\Http\Request $request) {
     $language = $request->input('language', 'en');
     
@@ -57,14 +55,14 @@ Route::post('/change-language', function (Illuminate\Http\Request $request) {
         $language = 'en';
     }
     
-    // Store in session
+    // Store in session (this persists across pages)
     session(['locale' => $language]);
     
-    // Set Laravel locale
+    // Set Laravel locale for current request
     app()->setLocale($language);
     
-    // Return success
-    return back();
+    // Return success with locale in props
+    return back()->with('locale', $language);
 })->name('change-language');
 
 require __DIR__.'/settings.php';

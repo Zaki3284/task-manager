@@ -1,26 +1,15 @@
-import { router } from '@inertiajs/react'
-import { useState, useEffect } from 'react'
+import { usePage } from '@inertiajs/react'
+import { useState } from 'react'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useTranslation } from '@/hooks/useTranslation'
 
 export default function Welcome() {
-  const { t, locale, setLocale, dir } = useTranslation()
+  const { t, dir } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { props } = usePage()
+  const auth = (props as any).auth || { user: null }
+  const canRegister = (props as any).canRegister !== false
 
-  const auth = { user: null }
-  const canRegister = true
-
-  // Change language handler that updates server
-  const changeLanguage = (lang: string) => {
-    setLocale(lang)
-    
-    // Update server-side language preference
-    router.post('/change-language', { language: lang }, {
-      preserveScroll: true,
-      preserveState: true
-    })
-  }
-
-  // Tasks with translations
   const tasks = [
     { task: t('task_design_landing'), done: true },
     { task: t('task_fix_login'), done: true },
@@ -54,59 +43,39 @@ export default function Welcome() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div
-            className={`collapse navbar-collapse ${
-              isMenuOpen ? 'show' : ''
-            }`}
-          >
+          <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
             <div className="d-flex align-items-center gap-3 ms-auto">
               <a className="nav-link" href="#features">
                 <i className="bi bi-stars me-1"></i>
                 {t('features')}
               </a>
+
               <a className="nav-link" href="#pricing">
                 <i className="bi bi-tags me-1"></i>
                 {t('pricing')}
               </a>
+
               <a className="nav-link" href="#contact">
                 <i className="bi bi-envelope me-1"></i>
                 {t('contact')}
               </a>
 
-              {/* Language Select */}
-              <select
-                className="form-select form-select-sm"
-                style={{ width: '120px' }}
-                value={locale}
-                onChange={(e) => changeLanguage(e.target.value)}
-              >
-                <option value="en">🇬🇧 English</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="ar">🇸🇦 العربية</option>
-              </select>
+              <LanguageSwitcher variant="select" />
 
               {auth.user ? (
-                <a
-                  href="/dashboard"
-                  className="btn btn-primary"
-                >
+                <a href="/dashboard" className="btn btn-primary">
                   <i className="bi bi-speedometer2 me-1"></i>
                   {t('dashboard')}
                 </a>
               ) : (
                 <>
-                  <a
-                    href="/login"
-                    className="btn btn-outline-primary"
-                  >
+                  <a href="/login" className="btn btn-outline-primary">
                     <i className="bi bi-box-arrow-in-right me-1"></i>
                     {t('login')}
                   </a>
+
                   {canRegister && (
-                    <a
-                      href="/register"
-                      className="btn btn-primary"
-                    >
+                    <a href="/register" className="btn btn-primary">
                       <i className="bi bi-person-plus me-1"></i>
                       {t('sign_up_free')}
                     </a>
@@ -131,11 +100,9 @@ export default function Welcome() {
         <div className="container">
           <div className="row align-items-center g-5">
             <div className="col-lg-6">
-              <div className="mb-3">
-                <span className="badge bg-warning text-dark px-3 py-2">
-                  {t('hero_badge')}
-                </span>
-              </div>
+              <span className="badge bg-warning text-dark px-3 py-2 mb-3">
+                {t('hero_badge')}
+              </span>
 
               <h1 className="display-4 fw-bold mb-4">
                 {t('hero_title')}{' '}
@@ -144,28 +111,21 @@ export default function Welcome() {
                 </span>
               </h1>
 
-              <p className="lead mb-4">
-                {t('hero_description')}
-              </p>
+              <p className="lead mb-4">{t('hero_description')}</p>
 
               <div className="d-flex gap-3">
-                <a
-                  href="/register"
-                  className="btn btn-warning btn-lg"
-                >
+                <a href="/register" className="btn btn-warning btn-lg">
                   <i className="bi bi-play-circle me-1"></i>
                   {t('start_free_trial')}
                 </a>
-                <a
-                  href="/login"
-                  className="btn btn-light btn-lg"
-                >
+
+                <a href="/login" className="btn btn-light btn-lg">
                   {t('sign_in')}
                 </a>
               </div>
             </div>
 
-            {/* TASKS CARD */}
+            {/* TASKS */}
             <div className="col-lg-6">
               <div className="card shadow-lg border-0">
                 <div className="card-body">
@@ -197,9 +157,7 @@ export default function Welcome() {
                               : 'bg-warning text-dark'
                           }`}
                         >
-                          {task.done
-                            ? t('completed')
-                            : t('ongoing')}
+                          {task.done ? t('completed') : t('ongoing')}
                         </span>
                       </li>
                     ))}
@@ -211,12 +169,14 @@ export default function Welcome() {
         </div>
       </section>
 
-      {/* FEATURES SECTION */}
+      {/* FEATURES */}
       <section id="features" className="py-5 bg-light" dir={dir}>
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="display-5 fw-bold">{t('powerful_features')}</h2>
-            <p className="lead text-muted">{t('everything_team_needs')}</p>
+            <p className="lead text-muted">
+              {t('everything_team_needs')}
+            </p>
           </div>
 
           <div className="row g-4">
@@ -231,7 +191,9 @@ export default function Welcome() {
               <div key={i} className="col-md-4">
                 <div className="card h-100 border-0 shadow-sm">
                   <div className="card-body text-center">
-                    <i className={`${feature.icon} display-4 text-primary mb-3`}></i>
+                    <i
+                      className={`${feature.icon} display-4 text-primary mb-3`}
+                    ></i>
                     <h5 className="fw-bold">{feature.title}</h5>
                   </div>
                 </div>
@@ -250,6 +212,8 @@ export default function Welcome() {
           </small>
         </div>
       </footer>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </>
   )
 }
