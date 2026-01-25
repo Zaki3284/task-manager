@@ -4,18 +4,23 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        $locale = Session::get('locale', config('app.locale'));
+        // Get locale from session, default to 'en'
+        $locale = session('locale', config('app.locale', 'en'));
         
-        if (in_array($locale, ['en', 'fr', 'ar'])) {
-            App::setLocale($locale);
+        // Validate locale
+        $allowedLanguages = ['en', 'fr', 'ar'];
+        if (!in_array($locale, $allowedLanguages)) {
+            $locale = 'en';
         }
+        
+        // Set application locale
+        app()->setLocale($locale);
         
         return $next($request);
     }

@@ -1,78 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import arTranslations from '@/locales/ar.json'
-import enTranslations from '@/locales/en.json'
-import frTranslations from '@/locales/fr.json'
+import { router } from '@inertiajs/react'
+import { useState, useEffect } from 'react'
+import { useTranslation } from '@/hooks/useTranslation'
 
-/* ------------------------------
-   Translations
------------------------------- */
-const translations = {
-  en: enTranslations,
-  fr: frTranslations,
-  ar: arTranslations,
-}
-
-type Language = 'en' | 'fr' | 'ar'
-
-/* ------------------------------
-   Component
------------------------------- */
 export default function Welcome() {
+  const { t, locale, setLocale, dir } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [currentLanguage, setCurrentLanguage] =
-    useState<Language>('ar')
-  const [t, setT] = useState(translations.en)
 
   const auth = { user: null }
   const canRegister = true
 
-  /* ------------------------------
-     Load saved language
-  ------------------------------ */
-  useEffect(() => {
-    const savedLang =
-      localStorage.getItem('preferred_language') as Language | null
-
-    if (savedLang && translations[savedLang]) {
-      setCurrentLanguage(savedLang)
-    }
-  }, [])
-
-  /* ------------------------------
-     Apply language changes
-  ------------------------------ */
-  useEffect(() => {
-    setT(translations[currentLanguage])
-
-    localStorage.setItem(
-      'preferred_language',
-      currentLanguage
-    )
-
-    document.documentElement.lang = currentLanguage
-    document.documentElement.dir =
-      currentLanguage === 'ar' ? 'rtl' : 'ltr'
-  }, [currentLanguage])
-
-  /* ------------------------------
-     Change language (LOCAL ONLY)
-  ------------------------------ */
-  const changeLanguage = (lang: Language) => {
-    setCurrentLanguage(lang)
+  // Change language handler that updates server
+  const changeLanguage = (lang: string) => {
+    setLocale(lang)
+    
+    // Update server-side language preference
+    router.post('/change-language', { language: lang }, {
+      preserveScroll: true,
+      preserveState: true
+    })
   }
 
-  /* ------------------------------
-     Tasks
-  ------------------------------ */
+  // Tasks with translations
   const tasks = [
-    { task: t.task_design_landing, done: true },
-    { task: t.task_fix_login, done: true },
-    { task: t.task_deploy_project, done: false },
+    { task: t('task_design_landing'), done: true },
+    { task: t('task_fix_login'), done: true },
+    { task: t('task_deploy_project'), done: false },
   ]
 
-  /* ------------------------------
-     Render
-  ------------------------------ */
   return (
     <>
       {/* Bootstrap */}
@@ -87,7 +41,7 @@ export default function Welcome() {
 
       {/* NAVBAR */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
-        <div className="container">
+        <div className="container" dir={dir}>
           <a className="navbar-brand fw-bold" href="/">
             <i className="bi bi-check2-square me-2"></i>
             TaskFlowPro
@@ -108,27 +62,23 @@ export default function Welcome() {
             <div className="d-flex align-items-center gap-3 ms-auto">
               <a className="nav-link" href="#features">
                 <i className="bi bi-stars me-1"></i>
-                {t.features}
+                {t('features')}
               </a>
               <a className="nav-link" href="#pricing">
                 <i className="bi bi-tags me-1"></i>
-                {t.pricing}
+                {t('pricing')}
               </a>
               <a className="nav-link" href="#contact">
                 <i className="bi bi-envelope me-1"></i>
-                {t.contact}
+                {t('contact')}
               </a>
 
               {/* Language Select */}
               <select
                 className="form-select form-select-sm"
                 style={{ width: '120px' }}
-                value={currentLanguage}
-                onChange={(e) =>
-                  changeLanguage(
-                    e.target.value as Language
-                  )
-                }
+                value={locale}
+                onChange={(e) => changeLanguage(e.target.value)}
               >
                 <option value="en">🇬🇧 English</option>
                 <option value="fr">🇫🇷 Français</option>
@@ -141,7 +91,7 @@ export default function Welcome() {
                   className="btn btn-primary"
                 >
                   <i className="bi bi-speedometer2 me-1"></i>
-                  {t.dashboard}
+                  {t('dashboard')}
                 </a>
               ) : (
                 <>
@@ -150,7 +100,7 @@ export default function Welcome() {
                     className="btn btn-outline-primary"
                   >
                     <i className="bi bi-box-arrow-in-right me-1"></i>
-                    {t.login}
+                    {t('login')}
                   </a>
                   {canRegister && (
                     <a
@@ -158,7 +108,7 @@ export default function Welcome() {
                       className="btn btn-primary"
                     >
                       <i className="bi bi-person-plus me-1"></i>
-                      {t.sign_up_free}
+                      {t('sign_up_free')}
                     </a>
                   )}
                 </>
@@ -176,19 +126,26 @@ export default function Welcome() {
             'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           paddingTop: '80px',
         }}
+        dir={dir}
       >
         <div className="container">
           <div className="row align-items-center g-5">
             <div className="col-lg-6">
+              <div className="mb-3">
+                <span className="badge bg-warning text-dark px-3 py-2">
+                  {t('hero_badge')}
+                </span>
+              </div>
+
               <h1 className="display-4 fw-bold mb-4">
-                {t.hero_title}{' '}
+                {t('hero_title')}{' '}
                 <span className="text-warning">
-                  {t.hero_subtitle}
+                  {t('hero_subtitle')}
                 </span>
               </h1>
 
               <p className="lead mb-4">
-                {t.hero_description}
+                {t('hero_description')}
               </p>
 
               <div className="d-flex gap-3">
@@ -197,13 +154,13 @@ export default function Welcome() {
                   className="btn btn-warning btn-lg"
                 >
                   <i className="bi bi-play-circle me-1"></i>
-                  {t.start_free_trial}
+                  {t('start_free_trial')}
                 </a>
                 <a
                   href="/login"
                   className="btn btn-light btn-lg"
                 >
-                  {t.sign_in}
+                  {t('sign_in')}
                 </a>
               </div>
             </div>
@@ -214,7 +171,7 @@ export default function Welcome() {
                 <div className="card-body">
                   <h5 className="fw-bold mb-3">
                     <i className="bi bi-list-check me-1"></i>
-                    {t.todays_tasks}
+                    {t('todays_tasks')}
                   </h5>
 
                   <ul className="list-group list-group-flush">
@@ -241,8 +198,8 @@ export default function Welcome() {
                           }`}
                         >
                           {task.done
-                            ? t.completed
-                            : t.ongoing}
+                            ? t('completed')
+                            : t('ongoing')}
                         </span>
                       </li>
                     ))}
@@ -250,17 +207,46 @@ export default function Welcome() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
+      {/* FEATURES SECTION */}
+      <section id="features" className="py-5 bg-light" dir={dir}>
+        <div className="container">
+          <div className="text-center mb-5">
+            <h2 className="display-5 fw-bold">{t('powerful_features')}</h2>
+            <p className="lead text-muted">{t('everything_team_needs')}</p>
+          </div>
+
+          <div className="row g-4">
+            {[
+              { icon: 'bi-list-check', title: t('task_management') },
+              { icon: 'bi-people', title: t('team_collaboration') },
+              { icon: 'bi-graph-up', title: t('analytics') },
+              { icon: 'bi-calendar-event', title: t('scheduling') },
+              { icon: 'bi-bell', title: t('notifications') },
+              { icon: 'bi-shield-check', title: t('security') },
+            ].map((feature, i) => (
+              <div key={i} className="col-md-4">
+                <div className="card h-100 border-0 shadow-sm">
+                  <div className="card-body text-center">
+                    <i className={`${feature.icon} display-4 text-primary mb-3`}></i>
+                    <h5 className="fw-bold">{feature.title}</h5>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-dark text-white py-4">
+      <footer className="bg-dark text-white py-4" dir={dir}>
         <div className="container text-center">
           <small>
             © {new Date().getFullYear()} TaskFlow Pro —{' '}
-            {t.all_rights_reserved}
+            {t('all_rights_reserved')}
           </small>
         </div>
       </footer>

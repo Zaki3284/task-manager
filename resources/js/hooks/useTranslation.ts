@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
+import arTranslations from '@/locales/ar.json';
 import enTranslations from '@/locales/en.json';
 import frTranslations from '@/locales/fr.json';
-import arTranslations from '@/locales/ar.json';
 
 const translations = {
   en: enTranslations,
@@ -15,19 +15,22 @@ type TranslationKey = keyof typeof enTranslations;
 
 export function useTranslation() {
   const { props } = usePage();
+  
+  // ✅ Get locale from server props (passed from Laravel)
   const serverLocale = (props as any).locale || 'en';
   
   const [locale, setLocaleState] = useState<Locale>(serverLocale);
   const [t, setT] = useState(translations[serverLocale as Locale] || translations.en);
 
+  // ✅ Update translations when server locale changes
   useEffect(() => {
-    const savedLocale = (localStorage.getItem('preferred_language') as Locale) || serverLocale;
-    
-    if (savedLocale && translations[savedLocale]) {
-      setLocaleState(savedLocale);
-      setT(translations[savedLocale]);
-      document.documentElement.dir = savedLocale === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = savedLocale;
+    if (serverLocale && translations[serverLocale as Locale]) {
+      setLocaleState(serverLocale);
+      setT(translations[serverLocale]);
+      
+      // Update DOM attributes
+      document.documentElement.dir = serverLocale === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = serverLocale;
     }
   }, [serverLocale]);
 
@@ -37,7 +40,8 @@ export function useTranslation() {
     if (translations[typedLocale]) {
       setLocaleState(typedLocale);
       setT(translations[typedLocale]);
-      localStorage.setItem('preferred_language', newLocale);
+      
+      // Update DOM immediately for better UX
       document.documentElement.dir = typedLocale === 'ar' ? 'rtl' : 'ltr';
       document.documentElement.lang = typedLocale;
     }

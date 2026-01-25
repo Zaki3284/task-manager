@@ -38,4 +38,23 @@
   "total_users": "Total des utilisateurs",
   "active_users": "Utilisateurs actifs",
   "inactive_users": "Utilisateurs inactifs"
+,
+  "report_problem": "Signaler un problème",
+  "help_center": "Centre d'aide"
+
+
+,
+  "register": "S'inscrire",
+  "welcome_back_login": "Bon retour, veuillez vous connecter",
+  "email_placeholder": "nom@entreprise.com",
+  "forgot_password": "Oublié?",
+  "remember_me": "Se souvenir de moi",
+  "signing_in": "Connexion en cours...",
+  "no_account": "Vous n'avez pas de compte?",
+  "create_one": "Créer un",
+  "create_your_account": "Créez votre compte",
+  "full_name": "Jean Dupont",
+  "creating_account": "Création du compte...",
+  "create_account": "Créer un compte",
+  "already_have_account": "Vous avez déjà un compte?"
 }

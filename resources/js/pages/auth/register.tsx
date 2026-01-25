@@ -1,7 +1,10 @@
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Head, Link, useForm, router } from '@inertiajs/react'
 import { FaTasks } from 'react-icons/fa'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export default function Register() {
+    const { t, locale, dir } = useTranslation()
+    
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -16,9 +19,16 @@ export default function Register() {
         })
     }
 
+    const changeLanguage = (lang: string) => {
+        router.post('/change-language', { language: lang }, {
+            preserveScroll: true,
+            preserveState: true
+        })
+    }
+
     return (
         <>
-            <Head title="Register" />
+            <Head title={t('register')} />
 
             {/* Bootstrap */}
             <link
@@ -37,6 +47,7 @@ export default function Register() {
                     background:
                         'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 }}
+                dir={dir}
             >
                 <div className="container">
                     <div className="row justify-content-center">
@@ -64,8 +75,21 @@ export default function Register() {
                                             TaskFlow<span className="text-primary">Pro</span>
                                         </h4>
                                         <p className="text-muted small mb-0">
-                                            Create your account
+                                            {t('create_your_account')}
                                         </p>
+                                    </div>
+
+                                    {/* Language Selector */}
+                                    <div className="mb-3">
+                                        <select
+                                            className="form-select form-select-sm"
+                                            value={locale}
+                                            onChange={(e) => changeLanguage(e.target.value)}
+                                        >
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="ar">🇸🇦 العربية</option>
+                                        </select>
                                     </div>
 
                                     {/* Form */}
@@ -73,7 +97,7 @@ export default function Register() {
                                         {/* Name */}
                                         <div className="mb-3">
                                             <label className="form-label small">
-                                                Full name
+                                                {t('name')}
                                             </label>
                                             <div className="input-group">
                                                 <span className="input-group-text bg-light">
@@ -86,7 +110,7 @@ export default function Register() {
                                                     onChange={(e) =>
                                                         setData('name', e.target.value)
                                                     }
-                                                    placeholder="John Doe"
+                                                    placeholder={t('full_name')}
                                                     required
                                                 />
                                             </div>
@@ -100,7 +124,7 @@ export default function Register() {
                                         {/* Email */}
                                         <div className="mb-3">
                                             <label className="form-label small">
-                                                Email address
+                                                {t('email')}
                                             </label>
                                             <div className="input-group">
                                                 <span className="input-group-text bg-light">
@@ -113,7 +137,7 @@ export default function Register() {
                                                     onChange={(e) =>
                                                         setData('email', e.target.value)
                                                     }
-                                                    placeholder="name@company.com"
+                                                    placeholder={t('email_placeholder')}
                                                     required
                                                 />
                                             </div>
@@ -127,7 +151,7 @@ export default function Register() {
                                         {/* Password */}
                                         <div className="mb-3">
                                             <label className="form-label small">
-                                                Password
+                                                {t('password')}
                                             </label>
                                             <div className="input-group">
                                                 <span className="input-group-text bg-light">
@@ -154,7 +178,7 @@ export default function Register() {
                                         {/* Confirm Password */}
                                         <div className="mb-4">
                                             <label className="form-label small">
-                                                Confirm password
+                                                {t('confirm_password')}
                                             </label>
                                             <div className="input-group">
                                                 <span className="input-group-text bg-light">
@@ -194,10 +218,10 @@ export default function Register() {
                                             {processing ? (
                                                 <>
                                                     <span className="spinner-border spinner-border-sm me-2"></span>
-                                                    Creating account...
+                                                    {t('creating_account')}
                                                 </>
                                             ) : (
-                                                'Create account'
+                                                t('create_account')
                                             )}
                                         </button>
                                     </form>
@@ -205,13 +229,13 @@ export default function Register() {
                                     {/* Login */}
                                     <div className="text-center mt-4">
                                         <span className="text-muted small">
-                                            Already have an account?
+                                            {t('already_have_account')}
                                         </span>{' '}
                                         <Link
                                             href="login"
                                             className="fw-semibold text-decoration-none"
                                         >
-                                            Sign in
+                                            {t('sign_in')}
                                         </Link>
                                     </div>
                                 </div>

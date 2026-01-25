@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { FaProjectDiagram, FaTasks, FaUsers } from 'react-icons/fa';
+import { useTranslation } from '@/hooks/useTranslation';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
@@ -13,22 +14,24 @@ type DashboardProps = {
 };
 
 export default function Dashboard({ counts }: DashboardProps) {
+    const { t } = useTranslation();
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'dashboard',
+            title: t('dashboard'),
             href: dashboard().url,
         },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title='dashboard' />
+            <Head title={t('dashboard')} />
 
             <div className="container-fluid py-4">
                 {/* Header */}
                 <div className="mb-4">
-                    <h1 className="h3 mb-2">dashboard</h1>
-                    <p className="text-muted">{('overview')}</p>
+                    <h1 className="h3 mb-2">{t('dashboard')}</h1>
+                    <p className="text-muted">{t('overview')}</p>
                 </div>
 
                 {/* Statistics Cards */}
@@ -42,7 +45,7 @@ export default function Dashboard({ counts }: DashboardProps) {
                                 </div>
                                 <div>
                                     <h3 className="mb-0 fw-bold">{counts.projects}</h3>
-                                    <p className="text-muted mb-0">{('projects')}</p>
+                                    <p className="text-muted mb-0">{t('projects')}</p>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +60,7 @@ export default function Dashboard({ counts }: DashboardProps) {
                                 </div>
                                 <div>
                                     <h3 className="mb-0 fw-bold">{counts.tasks}</h3>
-                                    <p className="text-muted mb-0">{('tasks')}</p>
+                                    <p className="text-muted mb-0">{t('tasks')}</p>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +75,7 @@ export default function Dashboard({ counts }: DashboardProps) {
                                 </div>
                                 <div>
                                     <h3 className="mb-0 fw-bold">{counts.users}</h3>
-                                    <p className="text-muted mb-0">{('users')}</p>
+                                    <p className="text-muted mb-0">{t('users')}</p>
                                 </div>
                             </div>
                         </div>
@@ -84,9 +87,9 @@ export default function Dashboard({ counts }: DashboardProps) {
                     <div className="col-12">
                         <div className="card shadow-sm border-0">
                             <div className="card-body p-4">
-                                <h2 className="h4 mb-3">{('welcome_message')}</h2>
+                                <h2 className="h4 mb-3">{t('welcome_message')}</h2>
                                 <p className="text-muted mb-0">
-                                    {('dashboard_description')}
+                                    {t('dashboard_description')}
                                 </p>
                             </div>
                         </div>

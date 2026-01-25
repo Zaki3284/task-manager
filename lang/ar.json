@@ -38,4 +38,22 @@
   "total_users": "إجمالي المستخدمين",
   "active_users": "المستخدمون النشطون",
   "inactive_users": "المستخدمون غير النشطين"
+,
+  "report_problem": "الإبلاغ عن مشكلة",
+  "help_center": "مركز المساعدة",
+  "register": "التسجيل",
+  "welcome_back_login": "مرحباً بعودتك، يرجى تسجيل الدخول",
+  "email_placeholder": "الاسم@الشركة.com",
+  "forgot_password": "نسيت؟",
+  "remember_me": "تذكرني",
+  "signing_in": "جاري تسجيل الدخول...",
+  "no_account": "ليس لديك حساب؟",
+  "create_one": "أنشئ واحداً",
+  "create_your_account": "أنشئ حسابك",
+  "full_name": "أحمد محمد",
+  "creating_account": "جاري إنشاء الحساب...",
+  "create_account": "إنشاء حساب",
+  "already_have_account": "هل لديك حساب بالفعل؟"
+
+
 }

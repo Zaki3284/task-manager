@@ -1,5 +1,6 @@
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Head, Link, useForm, router } from '@inertiajs/react'
 import { FaTasks } from 'react-icons/fa'
+import { useTranslation } from '@/hooks/useTranslation'
 
 type Props = {
     status?: string
@@ -8,6 +9,8 @@ type Props = {
 }
 
 export default function Login({ status, canResetPassword, canRegister }: Props) {
+    const { t, locale, dir } = useTranslation()
+    
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -21,9 +24,16 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
         })
     }
 
+    const changeLanguage = (lang: string) => {
+        router.post('/change-language', { language: lang }, {
+            preserveScroll: true,
+            preserveState: true
+        })
+    }
+
     return (
         <>
-            <Head title="Login" />
+            <Head title={t('login')} />
 
             {/* Bootstrap */}
             <link
@@ -42,6 +52,7 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                     background:
                         'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 }}
+                dir={dir}
             >
                 <div className="container">
                     <div className="row justify-content-center">
@@ -68,8 +79,21 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                             TaskFlow<span className="text-primary">Pro</span>
                                         </h4>
                                         <p className="text-muted small mb-0">
-                                            Welcome back, please login
+                                            {t('welcome_back_login')}
                                         </p>
+                                    </div>
+
+                                    {/* Language Selector */}
+                                    <div className="mb-3">
+                                        <select
+                                            className="form-select form-select-sm"
+                                            value={locale}
+                                            onChange={(e) => changeLanguage(e.target.value)}
+                                        >
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="ar">🇸🇦 العربية</option>
+                                        </select>
                                     </div>
 
                                     {/* Status */}
@@ -84,7 +108,7 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                         {/* Email */}
                                         <div className="mb-3">
                                             <label className="form-label small">
-                                                Email address
+                                                {t('email')}
                                             </label>
                                             <div className="input-group">
                                                 <span className="input-group-text bg-light">
@@ -97,7 +121,7 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                                     onChange={(e) =>
                                                         setData('email', e.target.value)
                                                     }
-                                                    placeholder="name@company.com"
+                                                    placeholder={t('email_placeholder')}
                                                     required
                                                 />
                                             </div>
@@ -112,14 +136,14 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                         <div className="mb-3">
                                             <div className="d-flex justify-content-between">
                                                 <label className="form-label small">
-                                                    Password
+                                                    {t('password')}
                                                 </label>
                                                 {canResetPassword && (
                                                     <Link
                                                         href="password.request"
                                                         className="small text-decoration-none"
                                                     >
-                                                        Forgot?
+                                                        {t('forgot_password')}
                                                     </Link>
                                                 )}
                                             </div>
@@ -162,7 +186,7 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                                 className="form-check-label small"
                                                 htmlFor="remember"
                                             >
-                                                Remember me
+                                                {t('remember_me')}
                                             </label>
                                         </div>
 
@@ -179,10 +203,10 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                             {processing ? (
                                                 <>
                                                     <span className="spinner-border spinner-border-sm me-2"></span>
-                                                    Signing in...
+                                                    {t('signing_in')}
                                                 </>
                                             ) : (
-                                                'Sign In'
+                                                t('sign_in')
                                             )}
                                         </button>
                                     </form>
@@ -191,13 +215,13 @@ export default function Login({ status, canResetPassword, canRegister }: Props) 
                                     {canRegister && (
                                         <div className="text-center mt-4">
                                             <span className="text-muted small">
-                                                Don’t have an account?
+                                                {t('no_account')}
                                             </span>{' '}
                                             <Link
                                                 href="register"
                                                 className="fw-semibold text-decoration-none"
                                             >
-                                                Create one
+                                                {t('create_one')}
                                             </Link>
                                         </div>
                                     )}

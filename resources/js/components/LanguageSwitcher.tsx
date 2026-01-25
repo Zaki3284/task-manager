@@ -45,7 +45,7 @@ export default function LanguageSwitcher({
     setSelectedLang(langCode);
     setIsOpen(false);
     
-    localStorage.setItem('preferred_language', langCode);
+    // ✅ REMOVED localStorage - Only use server-side storage via cookie
     
     const lang = languages.find(l => l.code === langCode);
     if (lang) {
@@ -53,6 +53,7 @@ export default function LanguageSwitcher({
       document.documentElement.lang = langCode;
     }
     
+    // Server handles persistence via cookie
     router.post('/change-language', { language: langCode }, {
       preserveScroll: true,
       preserveState: true

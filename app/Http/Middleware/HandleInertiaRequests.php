@@ -48,7 +48,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'locale' => $locale,
+            'locale' => session('locale', config('app.locale', 'en')),
+            // 'locale' => $locale,
             'translations' => $translations,
             'dir' => $locale === 'ar' ? 'rtl' : 'ltr',
             'flash' => [

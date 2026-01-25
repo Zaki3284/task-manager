@@ -53,5 +53,21 @@
   "feature_team": "Real-time team collaboration",
   "feature_analytics": "Advanced analytics & reports",
   "join_users": "Join 50,000+ Users",
-  "all_rights_reserved": "All rights reserved."
+  "all_rights_reserved": "All rights reserved.",
+  "report_problem": "Report a Problem",
+  "help_center": "Help Center",
+  
+  "register": "Register",
+  "welcome_back_login": "Welcome back, please login",
+  "email_placeholder": "name@company.com",
+  "forgot_password": "Forgot?",
+  "remember_me": "Remember me",
+  "signing_in": "Signing in...",
+  "no_account": "Don't have an account?",
+  "create_one": "Create one",
+  "create_your_account": "Create your account",
+  "full_name": "John Doe",
+  "creating_account": "Creating account...",
+  "create_account": "Create account",
+  "already_have_account": "Already have an account?"
 }
