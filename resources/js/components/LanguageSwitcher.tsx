@@ -47,21 +47,51 @@ export default function LanguageSwitcher({
     setSelectedLang(langCode);
     setIsOpen(false);
     
+    // Update DOM immediately for better UX
     const lang = languages.find(l => l.code === langCode);
     if (lang) {
       document.documentElement.dir = lang.dir;
       document.documentElement.lang = langCode;
     }
     
-    // Global language change - affects ALL pages
-    router.post('/change-language', { language: langCode }, {
-      preserveScroll: true,
-      preserveState: false,
-      onSuccess: () => {
-        router.reload({ only: ['locale', 'translations', 'dir'] });
-      }
-    });
+    // ✅ Check if we're in an Inertia context
+    const isInertiaPage = window.location.pathname !== '/';
     
+    if (isInertiaPage) {
+      // Use Inertia routing for authenticated pages
+      router.post('/change-language', { language: langCode }, {
+        preserveScroll: true,
+        preserveState: false,
+      });
+    } else {
+      // ✅ Use regular form submission for welcome page
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/change-language';
+      
+      // CSRF token
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (csrfToken) {
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+      }
+      
+      // Language input
+      const langInput = document.createElement('input');
+      langInput.type = 'hidden';
+      langInput.name = 'language';
+      langInput.value = langCode;
+      form.appendChild(langInput);
+      
+      // Submit
+      document.body.appendChild(form);
+      form.submit();
+    }
+    
+    // Call onChange callback if provided
     if (onChange) {
       onChange(langCode);
     }

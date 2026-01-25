@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -10,6 +10,11 @@ export default function Welcome() {
   const auth = (props as any).auth || { user: null }
   const canRegister = (props as any).canRegister !== false
 
+  // Set initial direction based on locale
+  useEffect(() => {
+    document.documentElement.dir = dir
+  }, [dir])
+
   const tasks = [
     { task: t('task_design_landing'), done: true },
     { task: t('task_fix_login'), done: true },
@@ -18,13 +23,18 @@ export default function Welcome() {
 
   return (
     <>
+      {/* Meta tags for CSRF */}
+      <head>
+        <meta name="csrf-token" content={(props as any).csrf_token || ''} />
+      </head>
+
       {/* Bootstrap */}
       <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
       />
       <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
         rel="stylesheet"
       />
 
@@ -44,7 +54,7 @@ export default function Welcome() {
           </button>
 
           <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
-            <div className="d-flex align-items-center gap-3 ms-auto">
+            <div className={`d-flex align-items-center gap-3 ${dir === 'rtl' ? 'me-auto' : 'ms-auto'}`}>
               <a className="nav-link" href="#features">
                 <i className="bi bi-stars me-1"></i>
                 {t('features')}
@@ -91,8 +101,7 @@ export default function Welcome() {
       <section
         className="min-vh-100 d-flex align-items-center text-white"
         style={{
-          background:
-            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           paddingTop: '80px',
         }}
         dir={dir}
@@ -106,9 +115,7 @@ export default function Welcome() {
 
               <h1 className="display-4 fw-bold mb-4">
                 {t('hero_title')}{' '}
-                <span className="text-warning">
-                  {t('hero_subtitle')}
-                </span>
+                <span className="text-warning">{t('hero_subtitle')}</span>
               </h1>
 
               <p className="lead mb-4">{t('hero_description')}</p>
@@ -142,9 +149,7 @@ export default function Welcome() {
                       >
                         <span
                           style={{
-                            textDecoration: task.done
-                              ? 'line-through'
-                              : 'none',
+                            textDecoration: task.done ? 'line-through' : 'none',
                           }}
                         >
                           {task.task}
@@ -152,9 +157,7 @@ export default function Welcome() {
 
                         <span
                           className={`badge ${
-                            task.done
-                              ? 'bg-success'
-                              : 'bg-warning text-dark'
+                            task.done ? 'bg-success' : 'bg-warning text-dark'
                           }`}
                         >
                           {task.done ? t('completed') : t('ongoing')}
@@ -174,9 +177,7 @@ export default function Welcome() {
         <div className="container">
           <div className="text-center mb-5">
             <h2 className="display-5 fw-bold">{t('powerful_features')}</h2>
-            <p className="lead text-muted">
-              {t('everything_team_needs')}
-            </p>
+            <p className="lead text-muted">{t('everything_team_needs')}</p>
           </div>
 
           <div className="row g-4">
